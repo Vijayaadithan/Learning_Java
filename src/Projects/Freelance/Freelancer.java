@@ -1,25 +1,46 @@
 package Projects.Freelance;
 
-public class Client extends User
-{
+import java.util.ArrayList;
+import java.util.List;
 
-    public List<Project> postedprojects;
+public class Freelancer extends User {
 
-    public Client(String name,String email)
-    {
-        super(name,email);
+    public List<Project> assignedprojects;
+    private double earnings = 0.0;
+
+    public Freelancer(String name, String email) {
+        super(name, email);
+        this.assignedprojects=new ArrayList<>();
+
     }
 
-    public Project postProject(int id, String title, String description, double budget)
-    {
-        Project newProject=new Project(id,title,description,budget);
-        postedprojects.add(newProject);
-        System.out.println("Client "+this.getName()+" has posted for the project."+title);
-        return newProject;
+    public void acceptProject(Project project) {
+        if (project.getStatus().equals("OPEN")) {
+            project.assignFreelancer(this);
+            assignedprojects.add(project);
+            System.out.println("Freelancer " + this.getName() + " Accepted the project " + project.getTitle());
+        } else {
+            System.out.println("This Project is not open for assignment");
+        }
     }
-    public List<Project> getPostedProjects() {
-        return postedprojects;
-        ;
+
+    public void completeProject(Project project) {
+        if (assignedprojects.contains(project)) {
+            project.completeProject();
+            this.earnings += project.getBudget();
+            System.out.println("Freelancer " + this.getName() + " Completed the project " + project.getTitle());
+        } else {
+            System.out.println("Cannot complete this project");
+        }
+    }
+
+    public List<Project> getAssignedProjects() {
+        return assignedprojects;
+    }
+
+    public double getEarnings()
+    {
+        return earnings;
     }
 
 
@@ -29,4 +50,4 @@ public class Client extends User
         System.out.println("Name of the User :"+this.getName()+"    Email : "+this.getEmail());
     }
 }
-}
+
